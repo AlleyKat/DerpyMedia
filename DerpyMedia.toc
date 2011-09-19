@@ -1,0 +1,9 @@
+## Interface: 40200
+## Author: AlleyKat
+## Version: v0.1
+## Notes: Hello, my names is "DerpyMedia" addon, I contain a lot of media files and functions for DerpyUI.
+## SavedVariablesPerCharacter: DerpyPosVars, DerpyAB, DerpyNav, DerpyXCT, DerpyChat, DerpyMediaVars 
+## Title: |cffcccc22D|r|cff999999erpy|rMedia
+## OptionalDeps: CallbackHandler-1.0, LibSharedMedia-3.0, LibStub, oUF
+
+media.xml
