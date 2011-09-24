@@ -1,6 +1,7 @@
 ﻿local M,L = unpack(select(2,...))
 
 local colors_ = M["media"].button
+local unpack = unpack
 local setbutton = function(target,ison,parent)
 	local button = CreateFrame ("Frame",nil,parent)
 	button:SetFrameLevel(32)
@@ -48,7 +49,7 @@ local makebuttons = function(parent,r,s)
 	a:SetScript("OnMouseDown",_t1)
 	b:SetScript("OnMouseDown",_t2)
 	b:SetPoint("RIGHT",a,"LEFT",-4,0)
-	return a
+	return a,b
 end
 
 local setmenutext = function(t,frame)
@@ -57,100 +58,25 @@ local setmenutext = function(t,frame)
 	return text
 end
 
-local leave = function(s) s.t:SetTextColor(1,1,1) end
-local enter = function(s) s.t:SetTextColor(1,.3,.3) end
-
-local close_ui_button = function(parent)
-	local a = CreateFrame("Button",nil,parent)
-	a:SetSize(64,17)
-	a:SetPoint("BOTTOMLEFT",parent,10,7)
-	
-	local t = M.setfont(a,15)
-	t:SetText(string.upper(L['reload']))
-	t:SetPoint("LEFT")
-	a.t = t
-	
-	a:SetScript("OnEnter",enter)
-	a:SetScript("OnLeave",leave)
-	a:SetScript("OnClick",ReloadUI)
-end
-
-local click = function(self) self:GetParent():hide_() M.call.menu() end
-
-local mkclose = function(parent)
-	local a = CreateFrame("Button",nil,parent)
-	a:SetSize(64,17)
-	a:SetPoint("BOTTOMRIGHT",parent,-10,7)
-	
-	local t = M.setfont(a,15,nil,nil,"RIGHT")
-	t:SetText(string.upper(L['back']))
-	t:SetAllPoints()
-	a.t = t
-	
-	a:SetScript("OnEnter",enter)
-	a:SetScript("OnLeave",leave)
-	a:SetScript("OnClick",click)
-end
-
-local fade_show = function(self) 
-	self.fd:Hide()
-	UIFrameFadeIn(self,.7,0,1)
-end
-
-local update_alpha = function(self)
-	if self.parent:GetAlpha() == 0 then 
-		self.parent:Hide()
-		self:Hide()
-	end
-end
-
-local hide_ = function(self) UIFrameFadeOut(self,.7,1,0) self.fd:Show() end
-
-M.mkfade = function(p)
-	p.fd = CreateFrame("Frame",nil,p)
-	p.fd:Hide()
-	p.fd.parent = p -- lol!
-	p.fd:SetScript("OnUpdate",update_alpha)
-	p:SetScript("OnShow",fade_show)
-	p.hide_ = hide_
-end
-
 M.tweaks_mvn = function(frame,swtable,nametable,aboffset)
 	local b1,b2 = {}
 	local i = 1
 	local lasttext
 	for y,name in pairs(swtable) do
 		if nametable[y] then
-			b1[i] = makebuttons (frame,swtable,y)
+			b1[i],point_t = makebuttons (frame,swtable,y)
 			local a = setmenutext(nametable[y],frame)
 			if i == 1 then
 				b1[i]:SetPoint("TOPRIGHT",frame,-18,-aboffset)
-				a:SetPoint("TOPLEFT",frame,18,-aboffset + 2)
+				a:SetPoint("TOPLEFT",frame,18,-aboffset + 1.8)
 			else
 				b1[i]:SetPoint("TOPRIGHT",b1[i-1],"BOTTOMRIGHT",0,-3)
-				a:SetPoint("TOPLEFT",lasttext,"BOTTOMLEFT",0,-0.9)
+				a:SetPoint("TOPLEFT",lasttext,"BOTTOMLEFT",0,-1)
 			end
+			a:SetPoint("RIGHT",point_t,"LEFT",-4,0)
 			lasttext = a
 			i = i + 1
 		end
 	end
 	return i
-end
-
-M.make_settings = function(nametable,swtable,offset,width,sname,showreload)
-	local aboffset = (offset or 0) + 30
-	local frame = M.frame(UIParent,30,"HIGH")
-	frame:Hide()
-	frame:SetWidth(width or 70)
-	frame:SetPoint("CENTER")
-	local i = M.tweaks_mvn(frame,swtable,nametable,aboffset)
-	frame:SetHeight((i-1)*14+aboffset+28)
-	mkclose(frame)
-	M.mkfade(frame)
-	if showreload then close_ui_button(frame) end
-	local stname = M.setfont(frame,15,nil,nil,"CENTER")
-	stname:SetPoint("TOPLEFT",8,-6)
-	stname:SetPoint("TOPRIGHT",-8,-6)
-	stname:SetText(sname)
-	return frame
 end

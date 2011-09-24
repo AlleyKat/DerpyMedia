@@ -18,5 +18,5 @@ SlashCmdList.ALLEYRUN = M.allertrun
 SLASH_ALLEYRUN1 = "/arn"
 
 -- Menu call
-SlashCmdList.HMENU = M.call.menu
+SlashCmdList.HMENU = M.show_config
 SLASH_HMENU1 = "/py" 

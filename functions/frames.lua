@@ -132,3 +132,47 @@ M.framepop = function(parent,name,size_x,size_y)
 	self:SetPoint("CENTER",UIParent)
 	self:show()
 end
+
+local _p = function(self) self.r:Play() end
+local _s = function(self) self.r:Stop() end
+M.cirle = function(parent,dur,size,dt)
+	local t = parent:CreateTexture(nil,"BORDER")
+	t:SetTexture(M.media.prizvstudiu)
+	t:SetSize(size or 353,size or 353)
+	local x = 0
+	local rotate = t:CreateAnimationGroup("lol")
+	local a = rotate:CreateAnimation("Rotation")
+	a:SetDuration(dur or 120) 
+	a:SetOrder(1)
+	a:SetDegrees(dt or 3600)
+	rotate:SetLooping("REPEAT")
+	t.r = rotate
+	t.play = _p
+	t.stop = _s
+	return t
+end
+
+local _d = function(self) self.t:play() end
+local _p = function(self) self.t:stop() end
+local rand_id = 0
+M.cut_circle = function(parent,level,strata,size,dur,dt,noplay)
+	local x = M.frame(parent,level,strata,true)
+	x:SetBackdrop(M.bg_edge)
+	x:backcolor(0,0,0)
+	--x:points()
+	local y = CreateFrame("ScrollFrame","DerpyCircle_"..rand_id,x)
+	rand_id = rand_id + 1
+	y:SetFrameLevel(level-1 or 1)
+	y:SetPoint("TOPLEFT",x,4,-4)
+	y:SetPoint("BOTTOMRIGHT",x,-4,4)
+	local z = CreateFrame("Frame",nil,x)
+	y:SetScrollChild(z)
+	local t = M.cirle(z,dur,size,dt)
+	x.t = t
+	t:SetPoint("CENTER",x)
+	if not noplay then
+		x:SetScript("OnShow",_d)
+		x:SetScript("OnHide",_p)
+	end
+	return x
+end

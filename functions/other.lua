@@ -179,7 +179,7 @@ local tex_scroll = function(self)
 	local x = M.frame(self,self:GetFrameLevel(),self:GetFrameStrata())
 	x:points()
 	self.bg = x
-	M.enterleave(self,1,1,.2)
+	M.enterleave(self,1,1,1)
 end
 	
 M.unscroll = function(frame)
